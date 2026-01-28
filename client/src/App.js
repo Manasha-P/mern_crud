@@ -1,9 +1,91 @@
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+
+// // 🔴 CHANGE THIS TO YOUR RENDER BACKEND URL
+// const API = process.env.REACT_APP_API_URL || 
+//   "https://mern-crud.onrender.com/api/users";
+
+// function App() {
+//   const [people, setPeople] = useState([]);
+//   const [form, setForm] = useState({ name: "", age: "" });
+//   const [editId, setEditId] = useState(null);
+
+//   useEffect(() => {
+//     loadPeople();
+//   }, []);
+
+//   const loadPeople = async () => {
+//     const res = await axios.get(API);
+//     setPeople(res.data);
+//   };
+
+//   const addPerson = async () => {
+//     const res = await axios.post(API, form);
+//     setPeople([...people, res.data]);
+//     setForm({ name: "", age: "" });
+//   };
+
+//   const updatePerson = async () => {
+//     const res = await axios.put(`${API}/${editId}`, form);
+//     setPeople(people.map(p => (p._id === editId ? res.data : p)));
+//     setEditId(null);
+//     setForm({ name: "", age: "" });
+//   };
+
+//   const deletePerson = async (id) => {
+//     await axios.delete(`${API}/${id}`);
+//     setPeople(people.filter(p => p._id !== id));
+//   };
+
+//   return (
+//     <div>
+//       <h3>MERN CRUD</h3>
+
+//       <input
+//         placeholder="Name"
+//         value={form.name}
+//         onChange={e => setForm({ ...form, name: e.target.value })}
+//       />
+
+//       <input
+//         type="number"
+//         placeholder="Age"
+//         value={form.age}
+//         onChange={e => setForm({ ...form, age: e.target.value })}
+//       />
+
+//       {editId ? (
+//         <button onClick={updatePerson}>Update</button>
+//       ) : (
+//         <button onClick={addPerson}>Add</button>
+//       )}
+
+//       <hr />
+
+//       {people.map(p => (
+//         <div key={p._id}>
+//           <b>{p.name}</b> — {p.age}
+//           <button onClick={() => {
+//             setEditId(p._id);
+//             setForm({ name: p.name, age: p.age });
+//           }}>
+//             Edit
+//           </button>
+//           <button onClick={() => deletePerson(p._id)}>
+//             Delete
+//           </button>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+// export default App;
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// 🔴 CHANGE THIS TO YOUR RENDER BACKEND URL
-const API = process.env.REACT_APP_API_URL || 
-  "https://mern-crud.onrender.com/api/users";
+const API = (process.env.REACT_APP_API_URL||"http://localhost:4000")+"/users";
 
 function App() {
   const [people, setPeople] = useState([]);
@@ -27,14 +109,14 @@ function App() {
 
   const updatePerson = async () => {
     const res = await axios.put(`${API}/${editId}`, form);
-    setPeople(people.map(p => (p._id === editId ? res.data : p)));
+    setPeople(people.map(p => (p.id === editId ? res.data : p)));
     setEditId(null);
     setForm({ name: "", age: "" });
   };
 
   const deletePerson = async (id) => {
     await axios.delete(`${API}/${id}`);
-    setPeople(people.filter(p => p._id !== id));
+    setPeople(people.filter(p => p.id !== id));
   };
 
   return (
@@ -63,17 +145,13 @@ function App() {
       <hr />
 
       {people.map(p => (
-        <div key={p._id}>
+        <div key={p.id}>
           <b>{p.name}</b> — {p.age}
           <button onClick={() => {
-            setEditId(p._id);
+            setEditId(p.id);
             setForm({ name: p.name, age: p.age });
-          }}>
-            Edit
-          </button>
-          <button onClick={() => deletePerson(p._id)}>
-            Delete
-          </button>
+          }}>Edit</button>
+          <button onClick={() => deletePerson(p.id)}>Delete</button>
         </div>
       ))}
     </div>
